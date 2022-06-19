@@ -6,9 +6,7 @@ This is my collection of app templates.
 
 ## INSTALLATION
 
-To use a template, copy the file
-"ConsoleAppTemplate by Oliver Abraham.zip"
-into your Visual Studio Templates folder, i.e:
+To use a template, copy the corresponding zip file into your Visual Studio Templates folder, i.e:
 C:\Users\<YOUR USERNAME>\Documents\Visual Studio 2022\Templates\ProjectTemplates
 
 To create a new Visual Studio solution using this template, select file --> new --> project 
