@@ -12,6 +12,7 @@ namespace ConsoleAppTemplate;
 /// - nlog logger, with daily log rotation
 /// - a scheduler that is able to start a method on a regular basis
 /// 
+/// AUTHOR
 /// Written by Oliver Abraham, mail@oliver-abraham.de
 /// 
 /// INSTALLATION
@@ -66,6 +67,7 @@ public class Program
     private static void ReadConfiguration()
     {
         // ATTENTION: When loading fails, you probably forgot to set the properties of appsettings.hjson to "copy if newer"!
+        // ATTENTION: or you have an error in your json file
         _programSettingsManager = new ProgramSettingsManager<Configuration>().Load();
         _config = _programSettingsManager.Data;
         Console.WriteLine($"Loaded configuration file '{_programSettingsManager.ConfigFilename}'");
@@ -73,6 +75,7 @@ public class Program
 
     private static void ValidateConfiguration()
     {
+        // ATTENTION: When validating fails, you missed to enter a value for a property in your json file
         _programSettingsManager.Validate();
     }
 
@@ -87,7 +90,6 @@ public class Program
     #region ------------- Logging -------------------------------------------------------------
     private static void InitLogger()
     {
-        // NLog: setup the logger first to catch all errors
         try
         {
             _logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
@@ -99,6 +101,9 @@ public class Program
         }
     }
 
+    /// <summary>
+    /// To generate text like this, use https://onlineasciitools.com/convert-text-to-ascii-art
+    /// </summary>
     private static void PrintGreeting()
     {
         _logger.Debug("");
