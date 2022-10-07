@@ -1,6 +1,7 @@
 ﻿using Abraham.ProgramSettingsManager;
 using Abraham.Scheduler;
 using NLog.Web;
+using CommandLine;
 
 namespace ConsoleAppTemplate;
 
@@ -25,9 +26,10 @@ namespace ConsoleAppTemplate;
 /// </summary>
 public class Program
 {
-    public const string VERSION="2022-06-10";
+    public const string VERSION="2022-10-07";
 
     #region ------------- Fields --------------------------------------------------------------
+    private static CommandLineOptions _commandLineOptions;
     private static ProgramSettingsManager<Configuration> _programSettingsManager;
     private static Configuration _config;
     private static NLog.Logger _logger;
@@ -36,9 +38,31 @@ public class Program
 
 
 
+    #region ------------- Command line options ------------------------------------------------
+    class CommandLineOptions
+    {
+        [Option('c', "config", Default = "appsettings.hjson", Required = false, HelpText = 
+            """
+            Configuration file (full path and filename).
+            If you don't specify this option, the program will expect your configuration file 
+            named 'appsettings.hjson' in your program folder.
+            You can specify a different location.
+            You can use Variables for special folders, like %APPDATA%.
+            Please refer to the documentation of my nuget package https://github.com/OliverAbraham/Abraham.ProgramSettingsManager
+            """)]
+        public string ConfigurationFile { get; set; }
+
+        [Option('v', "verbose", Required = false, HelpText = "Set output to verbose messages.")]
+        public bool Verbose { get; set; }
+    }
+
+    #endregion
+
+
     #region ------------- Init ----------------------------------------------------------------
     public static void Main(string[] args)
     {
+        ParseCommandLineArguments();
         ReadConfiguration();
         ValidateConfiguration();
         InitLogger();
@@ -64,11 +88,22 @@ public class Program
 
 
     #region ------------- Configuration -------------------------------------------------------
+    private static void ParseCommandLineArguments()
+    {
+        string[] args = Environment.GetCommandLineArgs();
+        CommandLine.Parser.Default.ParseArguments<CommandLineOptions>(args)
+            .WithParsed   <CommandLineOptions>(options => { _commandLineOptions = options; })
+            .WithNotParsed<CommandLineOptions>(errors  => { Console.WriteLine(errors.ToString()); });
+    }
+
     private static void ReadConfiguration()
     {
         // ATTENTION: When loading fails, you probably forgot to set the properties of appsettings.hjson to "copy if newer"!
         // ATTENTION: or you have an error in your json file
-        _programSettingsManager = new ProgramSettingsManager<Configuration>().Load();
+        _programSettingsManager = new ProgramSettingsManager<Configuration>()
+            .UseFullPathAndFilename(_commandLineOptions.ConfigurationFile)
+            //.UsePathRelativeToSpecialFolder(_commandLineOptions.ConfigurationFile)
+            .Load();
         _config = _programSettingsManager.Data;
         Console.WriteLine($"Loaded configuration file '{_programSettingsManager.ConfigFilename}'");
     }
