@@ -4,9 +4,9 @@ namespace ConsoleAppTemplate;
 
 public class Configuration
 {
-    public string Option1   { get; set; }
-    public string Option2   { get; set; }
-    public string Option3	{ get; set; }
+    public string Option1   { get; set; } = "";
+    public string Option2   { get; set; } = "";
+    public string Option3	{ get; set; } = "";
 
     // Hint: to make values optional, you can use the [Optional] attribute:
     // [Optional]

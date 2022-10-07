@@ -50,7 +50,7 @@ public class Program
             You can use Variables for special folders, like %APPDATA%.
             Please refer to the documentation of my nuget package https://github.com/OliverAbraham/Abraham.ProgramSettingsManager
             """)]
-        public string ConfigurationFile { get; set; }
+        public string ConfigurationFile { get; set; } = "";
 
         [Option('v', "verbose", Required = false, HelpText = "Set output to verbose messages.")]
         public bool Verbose { get; set; }
